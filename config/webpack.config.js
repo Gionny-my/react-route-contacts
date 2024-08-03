@@ -72,8 +72,8 @@ const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 // less 配置
-const lessRegex = /\.(less)$/;
-const lessModuleRegex = /\.module\.(less)$/;
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/;
 
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
@@ -564,7 +564,7 @@ module.exports = function (webpackEnv) {
               ),
               sideEffects: true,
             },
-            // less modules 配置
+            // less 配置
             {
               test: lessModuleRegex,
               use: getStyleLoaders(
