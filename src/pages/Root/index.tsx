@@ -7,12 +7,17 @@ export default function Root(){
     <>
       <div className={styles.outer}>
         <div className={styles.sideBar}>
-          <h1>React Route</h1>
-          <div className={styles.title}>
+          <h1 className={styles.title}>React Route</h1>
+          <div className={styles.head}>
             <form method="post" action="/" className={styles.searchBox}>
               <div id="searchBtn">🔍</div>
-              <input type="search" name="search" id="search" />
-              <div id="searchSpinner">?</div>
+              <input 
+                id="search" 
+                name="search" 
+                type="search" 
+                placeholder="搜索..." 
+              />
+              <div id="searchSpinner" aria-hidden hidden={true}>?</div>
             </form>
             <form action="">
               <button type="submit" className={styles.createBtn}>+</button>
@@ -21,7 +26,7 @@ export default function Root(){
           <div>
             <ul>
               <li>
-                <a href={`/contacts/1`}></a>
+                <a href={`/contacts/1`}>三月七</a>
               </li>
             </ul>
           </div>
