@@ -1,15 +1,16 @@
 import './index.css';
 
+import Contact, {action as contactAction, loader as contactLoader} from "./pages/Contact/index";
+import EditContact, { action as editAction, loader as editLoader } from './pages/EditContact';
+import Root, { actionCreateContact, loader as rootLoader } from './pages/Root/index';
 import {
   RouterProvider,
   createBrowserRouter
 } from "react-router-dom";
 
-import Contact from "./pages/Contact/index";
 import ErrorPage from "./pages/ErrorPage/index";
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Root from './pages/Root/index';
 import reportWebVitals from './reportWebVitals';
 
 const router = createBrowserRouter([
@@ -17,10 +18,25 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
+    loader: rootLoader,
+    action: actionCreateContact,
     children: [
       {
-        path: 'contacts/:contactID',
-        element: <Contact />
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            path: 'contacts/:contactId',
+            element: <Contact />,
+            loader: contactLoader,
+            action: contactAction,
+          },
+          {
+            path: 'contacts/:contactId/edit',
+            element: <EditContact />,
+            loader: editLoader,
+            action: editAction,
+          },
+        ]
       }
     ]
   }

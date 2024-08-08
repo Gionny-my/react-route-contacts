@@ -1,0 +1,34 @@
+.outer {
+  display: flex;
+  margin: 20px;
+
+  .photo {
+    @photo-size: 150px;
+    width: @photo-size;
+    height: @photo-size;
+  }
+
+  .info {
+    margin-left: 20px;
+  
+    .nameLine {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      font-size: 30px;
+      font-weight: bold;
+    }
+  
+    .buttonLine {
+      display: flex;
+      margin-top: 20px;
+      
+      button {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+button {
+  cursor: pointer;
+}

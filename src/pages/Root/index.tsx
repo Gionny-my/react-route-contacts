@@ -1,16 +1,34 @@
-import { Form, Link, Outlet } from "react-router-dom";
+import { Form, Link, NavLink, Outlet, redirect, useLoaderData } from "react-router-dom";
+import { createContact, getContacts } from '../../contacts';
 
+import { IContact } from '../../types';
 import React from "react";
 import styles from "./index.module.less";
 
+export async function loader() {
+  const contacts = await getContacts('');
+  return { contacts }
+}
+
+export async function actionCreateContact() {
+  const contact = await createContact();
+  return redirect(`contacts/${contact.id}/edit`);
+}
+
 export default function Root(){
+  const loader = useLoaderData() as object;
+  let contacts: IContact[] = [];
+  if ('contacts' in loader && Array.isArray(loader.contacts)) {
+    contacts = loader.contacts;
+  }
+
   return (
     <>
       <div className={styles.outer}>
         <div className={styles.sideBar}>
-          <h1 className={styles.title}>React Route</h1>
+          <Link to="/" className={styles.title}>联系人</Link>
           <div className={styles.head}>
-            <form method="post" action="/" className={styles.searchBox}>
+            <Form method="post" className={styles.searchBox}>
               <div id="searchBtn">🔍</div>
               <input 
                 id="search" 
@@ -19,20 +37,25 @@ export default function Root(){
                 placeholder="搜索..." 
               />
               <div id="searchSpinner" aria-hidden hidden={true}>?</div>
-            </form>
-            <form action="">
+            </Form>
+            <Form method="post">
               <button type="submit" className={styles.createBtn}>+</button>
-            </form>
+            </Form>
           </div>
           <div>
-            <ul>
-              <li>
-                <Link to={`/contacts/1`}>三月七</Link>
-              </li>
-              <li>
-                <Link to={`/contacts/2`}>伍四六</Link>
-              </li>
-            </ul>
+            {
+              contacts.length > 0 ? (
+                <ul>
+                  {
+                    contacts.map(contact => (
+                        <li key={contact.id}>
+                          <NavLink to={`/contacts/${contact.id}`}>{contact.name || '佚名'}</NavLink>
+                        </li>
+                    ))
+                  }
+                </ul>
+              ) : '没有联系人'
+            }
           </div>
         </div>
         <div id="details">

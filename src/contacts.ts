@@ -1,6 +1,7 @@
 /**
  * TODO：教程用
  */
+// @ts-nocheck
 
 import localforage from "localforage";
 import { matchSorter } from "match-sorter";
