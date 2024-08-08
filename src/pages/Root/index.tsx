@@ -1,4 +1,5 @@
-import { Form } from "react-router-dom";
+import { Form, Link, Outlet } from "react-router-dom";
+
 import React from "react";
 import styles from "./index.module.less";
 
@@ -26,13 +27,16 @@ export default function Root(){
           <div>
             <ul>
               <li>
-                <a href={`/contacts/1`}>三月七</a>
+                <Link to={`/contacts/1`}>三月七</Link>
+              </li>
+              <li>
+                <Link to={`/contacts/2`}>伍四六</Link>
               </li>
             </ul>
           </div>
         </div>
         <div id="details">
-          111
+          <Outlet />
         </div>
       </div>
     </>
