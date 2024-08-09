@@ -4,6 +4,7 @@ import { getContact, updateContact } from '../../contacts';
 
 import Favorite from './Favorite';
 import styles from "./index.module.less";
+import { useCallback } from 'react';
 
 interface ILoaderReturn {
   contact: IContact;
@@ -19,7 +20,7 @@ export async function loader(props: ILoaderProps): Promise<ILoaderReturn> {
   }
   throw new Response('', {
     status: 404,
-    statusText: 'No Person',
+    statusText: encodeURIComponent('查无此人'),
   });
 }
 
@@ -34,15 +35,21 @@ export async function action(props: IActionProps) {
         isFavorite: form.isFavorite === 'false',
       });
     } else {
-      throw new Response('', { status: 404, statusText: 'Form Error' });
+      throw new Response('', { status: 404, statusText: encodeURIComponent('收藏失败') });
     }
   } else {
-    throw new Response('', { status: 404, statusText: 'No Person' });
+    throw new Response('', { status: 404, statusText: encodeURIComponent(`URL参数错误`) });
   }
 }
 
 export default function Contact(){
   const { contact } = useLoaderData() as ILoaderReturn;
+
+  const onDelete = useCallback((event: React.FormEvent<HTMLButtonElement>) => {
+    if (!window.confirm('你要删了ta吗？')) {
+      event.preventDefault();
+    }
+  }, []);
 
   return (
     <div className={styles.outer}>
@@ -55,7 +62,7 @@ export default function Contact(){
         <div>{contact.note || '这个人什么也没留下'}</div>
         <div className={styles.buttonLine}>
           <Form action="edit"><button type="submit">编辑</button></Form>
-          <form action=""><button type="submit">删除</button></form>
+          <Form action="delete" method="post"><button type="submit" onSubmit={onDelete}>删除</button></Form>
         </div>
       </div>
     </div>

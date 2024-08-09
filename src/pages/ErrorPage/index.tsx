@@ -30,7 +30,7 @@ export default function ErrorPage(){
     <div className={styles.outer}>
       <div>出错啦！！</div>
       <div>错误信息如下：</div>
-      <div>{error ? error.statusText : '未知错误'}</div>
+      <div>{error ? decodeURIComponent(error.statusText) : '未知错误'}</div>
     </div>
   );
 }

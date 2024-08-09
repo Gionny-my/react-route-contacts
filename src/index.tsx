@@ -11,6 +11,7 @@ import {
 import ErrorPage from "./pages/ErrorPage/index";
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { action as deleteAction } from './pages/deleteContact';
 import reportWebVitals from './reportWebVitals';
 
 const router = createBrowserRouter([
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
             element: <EditContact />,
             loader: editLoader,
             action: editAction,
+          },
+          {
+            path: 'contacts/:contactId/delete',
+            action: deleteAction,
           },
         ]
       }
