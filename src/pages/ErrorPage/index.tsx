@@ -2,14 +2,22 @@ import styles from './index.module.less';
 import { useRouteError } from 'react-router-dom';
 
 interface ICustomError {
-  message: string,
+  status: number,
+  statusText: string
 }
+function isICustomError(param: any): param is ICustomError {
+  return (
+    param && 'status' in param && 'statusText' in param
+  );
+};
 
 function useCustomRouteError(): ICustomError | undefined {
   const error = useRouteError();
-  if (error instanceof Error) {
+  console.log(error);
+  if (isICustomError(error)) {
     return {
-      message: error.message,
+      status: error.status,
+      statusText: error.statusText,
     };
   }
   return undefined;
@@ -22,7 +30,7 @@ export default function ErrorPage(){
     <div className={styles.outer}>
       <div>出错啦！！</div>
       <div>错误信息如下：</div>
-      <div>{error ? error.message : '未知错误'}</div>
+      <div>{error ? error.statusText : '未知错误'}</div>
     </div>
   );
 }

@@ -1,7 +1,8 @@
-import { Form, redirect, useLoaderData } from "react-router-dom";
+import { Form, useLoaderData } from "react-router-dom";
 import { IActionProps, IContact, ILoaderProps } from '../../types';
+import { getContact, updateContact } from '../../contacts';
 
-import { getContact } from '../../contacts';
+import Favorite from './Favorite';
 import styles from "./index.module.less";
 
 interface ILoaderReturn {
@@ -10,23 +11,38 @@ interface ILoaderReturn {
 
 export async function loader(props: ILoaderProps): Promise<ILoaderReturn> {
   const { contactId } = props.params;
-  const contact = await getContact(contactId);
-  if (contact === null) {
-    throw new Response('', {
-      status: 404,
-      statusText: 'Not Found',
-    });
+  if (contactId) {
+    const contact = await getContact(contactId);
+    if (contact !== null) {
+      return { contact };
+    }
   }
-  return { contact };
+  throw new Response('', {
+    status: 404,
+    statusText: 'No Person',
+  });
 }
 
 export async function action(props: IActionProps) {
-  return redirect(`edit`);
+  const { params, request } = props;
+  const formData = await request.formData();
+  const form = Object.fromEntries(formData);
+  if ('contactId' in params && typeof params.contactId === 'string') {
+    if ('isFavorite' in form) {
+      return await updateContact(params.contactId, {
+        id: params.contactId,
+        isFavorite: form.isFavorite === 'false',
+      });
+    } else {
+      throw new Response('', { status: 404, statusText: 'Form Error' });
+    }
+  } else {
+    throw new Response('', { status: 404, statusText: 'No Person' });
+  }
 }
 
 export default function Contact(){
   const { contact } = useLoaderData() as ILoaderReturn;
-  console.log(contact);
 
   return (
     <div className={styles.outer}>
@@ -34,11 +50,11 @@ export default function Contact(){
       <div className={styles.info}>
         <div className={styles.nameLine}>
           <div className={contact.name ? '' : styles.noName}>{ contact.name || '佚名' }</div>
-          <Favorite isFavorite={contact.isFavorite} />
+          <Favorite isFavorite={contact.isFavorite || false} />
         </div>
         <div>{contact.note || '这个人什么也没留下'}</div>
         <div className={styles.buttonLine}>
-          <Form method="post"><button type="submit">编辑</button></Form>
+          <Form action="edit"><button type="submit">编辑</button></Form>
           <form action=""><button type="submit">删除</button></form>
         </div>
       </div>
@@ -46,25 +62,3 @@ export default function Contact(){
   );
 }
 
-interface IFavoriteProps {
-  isFavorite: boolean,
-};
-
-function Favorite(props: IFavoriteProps){
-  const { isFavorite } = props;
-  
-  return (
-    <>
-      <Form method="post">
-        <button
-          name="favorite"
-          value={`${isFavorite}`}
-          type="submit"
-          aria-label={isFavorite ? '取消收藏' : '添加收藏'}
-        >
-          {isFavorite ? "★" : "☆"}
-        </button>
-      </Form>
-    </>
-  );
-}

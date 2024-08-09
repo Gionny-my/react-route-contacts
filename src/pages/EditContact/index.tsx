@@ -1,5 +1,5 @@
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
-import { IActionProps, IContact, ILoaderProps } from '../../types';
+import { IActionProps, IContact, ILoaderProps, isIContact } from '../../types';
 import { getContact, updateContact } from '../../contacts';
 
 import styles from "./index.module.less";
@@ -10,14 +10,17 @@ interface ILoaderReturn {
 
 export async function loader(props: ILoaderProps): Promise<ILoaderReturn> {
   const { params } = props;
-  const contact = await getContact(params.contactId);
-  if (contact === null) {
-    throw new Response('', {
-      status: 404,
-      statusText: 'Not Found',
-    });
+  if ('contactId' in params && typeof params.contactId === 'string') {
+    const contact = await getContact(params.contactId);
+    if (contact !== null) {
+      return { contact };
+    }
   }
-  return { contact };
+
+  throw new Response('', {
+    status: 404,
+    statusText: 'No Person',
+  });
 }
 
 export async function action(props: IActionProps) {
@@ -25,8 +28,17 @@ export async function action(props: IActionProps) {
   const formData = await request?.formData() || new FormData();
   const data = Object.fromEntries(formData);
   const id = params?.contactId;
-  await updateContact(id, data);
-  return redirect(`/contacts/${id}`);
+  if (!id) {
+    throw new Response('', {
+      status: 404,
+      statusText: 'No Person',
+    })
+  }
+  if (isIContact(data)) {
+    await updateContact(id, data);
+    return redirect(`/contacts/${id}`);
+  }
+  throw new Response('', { status: 404, statusText:'Form Error' })
 }
 
 export default function EditContact(){
@@ -36,6 +48,7 @@ export default function EditContact(){
   return (
     <>
       <Form method="post" className={styles.outer}>
+        <input type="hidden" name="id" value={contact.id} />
         <div className={styles.form}>
           <label htmlFor="name">名字</label>
           <input type="text" name="name" id="name" defaultValue={contact.name} />
