@@ -45,11 +45,13 @@ export default function Root(){
           <div>
             {
               contacts.length > 0 ? (
-                <ul>
+                <ul className={styles.contactDisplay}>
                   {
                     contacts.map(contact => (
-                        <li key={contact.id}>
-                          <NavLink to={`/contacts/${contact.id}`}>{contact.name || '佚名'}</NavLink>
+                        <li key={contact.id} className={styles.contactNameLine}>
+                          <NavLink to={`/contacts/${contact.id}`} className={({ isActive, isPending}) => (
+                            `${isActive ? styles.active : isPending ? styles.pending : ''} ${styles.contactName}`
+                          )}>{contact.name || '佚名'}</NavLink>
                         </li>
                     ))
                   }
@@ -58,7 +60,7 @@ export default function Root(){
             }
           </div>
         </div>
-        <div id="details">
+        <div className={styles.details}>
           <Outlet />
         </div>
       </div>

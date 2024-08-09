@@ -40,7 +40,7 @@
         input {
           border: 0;
           outline: none;
-          width: 120px;
+          width: 130px;
           height: 25px;
         }
 
@@ -66,6 +66,44 @@
         cursor: pointer;
       }
     }
+    
+    .contactDisplay {
+      padding: 20px 20px 0;
+      margin: 0;
+
+      .contactNameLine {
+        overflow: hidden;
+        border-radius: 5px;
+        
+        &::marker {
+          content: none;
+        }
+        
+        .contactName {
+          display: block;
+          width: 100%;
+          text-wrap: nowrap;
+          text-decoration: none;
+          padding: 5px 5px;
+          color: black;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+          }
+        }
+        .active {
+          background-color: #5199ed;
+          color: white;
+          &:hover {
+            background-color: #5199ed;
+          }
+        }
+      }
+    }
+  }
+
+  .details {
+    width: 100%;
   }
 }
 
