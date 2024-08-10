@@ -17,6 +17,7 @@ export function isIContact(param: any): param is IContact {
 
 export interface ILoaderProps {
   params: Params<string>;
+  request: Request;
 };
 
 export interface IActionProps {

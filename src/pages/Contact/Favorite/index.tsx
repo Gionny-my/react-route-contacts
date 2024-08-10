@@ -8,7 +8,8 @@ interface IFavoriteProps {
 };
 
 export default function Favorite(props: IFavoriteProps){
-  const [isFavorite, setFavorite] = useState(props.isFavorite);
+  const { isFavorite } = props;
+  const [favorite, setFavorite] = useState(isFavorite);
   const fetcher = useFetcher();
 
   useEffect(() => {
@@ -21,16 +22,20 @@ export default function Favorite(props: IFavoriteProps){
     }
   }, [fetcher]);
 
+  useEffect(() => {
+    setFavorite(props.isFavorite);
+  }, [props]);
+
   return (
     <>
       <fetcher.Form method="post">
         <button
           name="isFavorite"
-          value={`${isFavorite}`}
+          value={`${favorite}`}
           type="submit"
           className={styles.button}
         >
-          {isFavorite ? "★" : "☆"}
+          {favorite ? "★" : "☆"}
         </button>
       </fetcher.Form>
     </>

@@ -1,6 +1,11 @@
 @border: 1px solid #d0d0d0;
 @border-color2: #c5c5c5;
 @font-color-blue: #5199ed;
+// @sideBar-width: 250px;
+@sideBar-padding: 20px;
+@searchBar-height: 30px;
+@searchBar-gap: 5px;
+@search-input-width: 150px;
 
 .outer {
   display: flex;
@@ -10,7 +15,6 @@
   .sideBar {
     border-right: @border;
     height: 100%;
-    width: 250px;
     background-color: #f0f0f0;
 
     .title {
@@ -20,34 +24,54 @@
       font-weight: bolder;
       color: black;
       text-decoration: none;
-      margin: 20px;
+      margin: @sideBar-padding;
     }
 
     .head {
-      display: flex;
-      justify-content: center;
-      width: cal(100% - 40px);
+      display: grid;
+      grid-template-columns: 1fr max-content;
+      column-gap: 5px;
       border-bottom: @border;
-      padding: 0 20px 20px;
-
+      padding: 0 @sideBar-padding 20px;
+      width: max-content;
       
       .searchBox {
-        display: inline-flex;
         border: @border;
         border-radius: 5px;
         background-color: white;
+        height: @searchBar-height;
+        width: max-content;
+        overflow: hidden;
+        box-sizing: border-box;
         
+        .searchIcon {
+          display: inline-block;
+          @margin-width: 5px;
+          margin: @margin-width;
+          width: @searchBar-height - @margin-width * 2;
+          height: @searchBar-height - @margin-width * 2;
+          background-image: url('data:image/svg+xml,%3Csvg%20t%3D%221723260373007%22%20class%3D%22icon%22%20viewBox%3D%220%200%201024%201024%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20p-id%3D%222481%22%3E%3Cpath%20d%3D%22M946.176%20887.808l-178.688-178.688c125.44-154.624%20116.224-382.976-27.648-526.848-153.6-153.6-403.968-153.6-557.568%200s-153.6%20403.968%200%20557.568c76.8%2076.8%20177.664%20115.2%20278.528%20115.2%2088.064%200%20176.128-29.184%20248.32-88.064l178.688%20178.688c8.192%208.192%2018.432%2011.776%2029.184%2011.776%2010.24%200%2020.992-4.096%2029.184-11.776%2015.872-15.872%2015.872-41.472%200-57.856zM240.128%20681.472c-121.856-121.856-121.856-320%200-441.856C301.056%20179.2%20380.928%20148.48%20460.8%20148.48c79.872%200%20159.744%2030.208%20220.672%2091.136%20121.856%20121.856%20121.856%20320%200%20441.856-121.344%20121.856-319.488%20121.856-441.344%200z%22%20p-id%3D%222482%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E');
+        }
+        .searchSpinIcon {
+          animation: spin 1s infinite linear;
+          background-image: url('data:image/svg+xml,%3Csvg%20t%3D%221723260767205%22%20class%3D%22icon%22%20viewBox%3D%220%200%201024%201024%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20p-id%3D%223636%22%3E%3Cpath%20d%3D%22M512%2064c247.2%200%20448%20200.8%20448%20448h-64c0-212-172-384-384-384V64z%20m0%20832c-212%200-384-172-384-384H64c0%20247.2%20200.8%20448%20448%20448v-64z%22%20p-id%3D%223637%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E');
+  
+          @keyframes spin {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        }
+
         input {
           border: 0;
           outline: none;
-          width: 130px;
-          height: 25px;
-        }
-
-        div {
-          display: flex;
-          align-items: center;
-          margin: 0 5px;
+          width: @search-input-width;
+          height: @searchBar-height;
+          vertical-align: top;
         }
       }
       
@@ -60,42 +84,69 @@
         align-items: center;
         border: @border;
         border-radius: 5px;
-        height: 27px;
-        min-width: 27px;
-        margin-left: 5px;
+        height: @searchBar-height;
+        width: @searchBar-height;
         cursor: pointer;
       }
     }
     
-    .contactDisplay {
-      padding: 20px 20px 0;
-      margin: 0;
+    .contactDisplayOuter {
+      text-align: center;
+      padding-top: 20px;
+      color: gray;
 
-      .contactNameLine {
-        overflow: hidden;
-        border-radius: 5px;
-        
-        &::marker {
-          content: none;
-        }
-        
-        .contactName {
-          display: block;
-          width: 100%;
-          text-wrap: nowrap;
-          text-decoration: none;
-          padding: 5px 5px;
-          color: black;
+      .contactDisplay {
+        width: 210px;
+        padding: 0 20px;
+        margin: 0;
+        text-align: start;
+        color: black;
+  
+        .contactNameLine {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          border-radius: 5px;
+          display: flex;
 
-          &:hover {
-            background-color: rgba(0, 0, 0, 0.1);
+          &::marker {
+            content: none;
           }
-        }
-        .active {
-          background-color: #5199ed;
-          color: white;
-          &:hover {
+          
+          .contactName {
+            display: block;
+            width: 100%;
+            text-wrap: nowrap;
+            text-decoration: none;
+            padding: 5px 5px;
+            color: black;
+            overflow: hidden;
+            text-overflow: ellipsis;
+  
+            &:hover {
+              background-color: rgba(0, 0, 0, 0.1);
+              & ~ .contactFavorite {
+                background-color: rgba(0, 0, 0, 0.1);
+              }
+            }
+          }
+          .active {
             background-color: #5199ed;
+            color: white;
+            
+            & ~ .contactFavorite,
+            &:hover {
+              background-color: #5199ed;
+              & ~ .contactFavorite {
+                background-color: #5199ed;
+              }
+            }
+
+          }
+
+          .contactFavorite {
+            display: inline-flex;
+            align-items: center;
+            padding-right: 5px;
           }
         }
       }
@@ -104,6 +155,9 @@
 
   .details {
     width: 100%;
+    &.loading {
+      opacity: 0.5;
+    }
   }
 }
 

@@ -2,7 +2,7 @@ import './index.css';
 
 import Contact, {action as contactAction, loader as contactLoader} from "./pages/Contact/index";
 import EditContact, { action as editAction, loader as editLoader } from './pages/EditContact';
-import Root, { actionCreateContact, loader as rootLoader } from './pages/Root/index';
+import Root, { action, loader as rootLoader } from './pages/Root/index';
 import {
   RouterProvider,
   createBrowserRouter
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     loader: rootLoader,
-    action: actionCreateContact,
+    action: action,
     children: [
       {
         errorElement: <ErrorPage />,
